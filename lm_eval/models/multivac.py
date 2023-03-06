@@ -178,9 +178,9 @@ class ComposerLLM(BaseLM):
         with torch.no_grad():
             if self.precision is not None:
                 with get_precision_context(self.precision):
-                    res = self.model(**args)
+                    res = self.model(args)
             else:
-                res = self.model(**args)
+                res = self.model(args)
 
             if isinstance(res, transformers.modeling_outputs.CausalLMOutputWithPast):
                 res = res.logits
