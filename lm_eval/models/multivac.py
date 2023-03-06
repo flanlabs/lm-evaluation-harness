@@ -145,11 +145,8 @@ class ComposerLLM(BaseLM):
         return self._device
 
     def tok_encode(self, string: str):
-        truncation = True
         return [
-            x for x in self.tokenizer(string,
-                                      truncation=truncation,
-                                      )['input_ids']
+            x for x in self.tokenizer(string)['input_ids'][:self.max_length]
             if x != self.tokenizer.bos_token_id
         ]
 
