@@ -11,6 +11,7 @@ from typing import Optional
 from lm_eval import utils
 import transformers
 import inspect
+from omegaconf import OmegaConf as om
 
 
 def build_composer_model(cfg):
