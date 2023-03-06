@@ -152,7 +152,7 @@ class ComposerLLM(BaseLM):
     def tok_encode(self, string: str):
         return [
             x for x in self.tokenizer(string)['input_ids'][:self.max_length]
-            if x != self.tokenizer.bos_token_id
+            if x != self.tokenizer.eos_token_id and x != self.tokenizer.eot_tokenid
         ]
 
     def tok_decode(self, tokens):
