@@ -20,7 +20,7 @@ def build_composer_model(cfg):
         raise ValueError(f'Not sure how to build model with name={cfg.name}')
 
 
-def load_state_dict_with_low_memory(model: nn.Module, state_dict: Dict[str, torch.Tensor]):
+def load_state_dict_with_low_memory(model: nn.Module, state_dict: dict[str, torch.Tensor]):
     # free up memory by placing the model in the `meta` device
     model.to(torch.device("meta"))
     keys_to_submodule = get_keys_to_submodule(model)
@@ -39,7 +39,7 @@ def load_state_dict_with_low_memory(model: nn.Module, state_dict: Dict[str, torc
         setattr(submodule, param_name, new_val)
 
 
-def get_keys_to_submodule(model: nn.Module) -> Dict[str, nn.Module]:
+def get_keys_to_submodule(model: nn.Module) -> dict[str, nn.Module]:
     keys_to_submodule = {}
     # iterate all submodules
     for submodule_name, submodule in model.named_modules():
