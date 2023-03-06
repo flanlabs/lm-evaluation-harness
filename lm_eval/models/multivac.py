@@ -6,8 +6,8 @@ from torch import nn
 import torch.nn.functional as F
 from composer.core.precision import get_precision_context, Precision
 from multivac.llm2.src.model_registry import COMPOSER_MODEL_REGISTRY
+from multivac.llm2.src.mosaic_gpt import MosaicGPT, ComposerMosaicGPT
 from multivac.src.tok.cl100k import Cl100kTokenizer
-from multivac.src.mosaic_gpt import MosaicGPT, ComposerMosaicGPT
 from typing import Optional
 from lm_eval import utils
 import transformers
