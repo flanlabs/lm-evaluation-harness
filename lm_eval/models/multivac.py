@@ -65,11 +65,26 @@ class ComposerLLM(BaseLM):
             self,
             ckpt_path: str,
             cfg_path: str,
+            device,
             # Can be any tokenizer whose forward method returns a dict w/ keys ['input_ids', 'attention_mask']
-            batch_size=4,
+            batch_size=2,
             precision: Optional[str] = None,
     ):
         super().__init__()
+
+        if device:
+            if device not in ["cuda", "cpu"]:
+                device = int(device)
+            self._device = torch.device(device)
+            print(f"Using device '{device}'")
+        else:
+            print("Device not specified")
+            print(f"Cuda Available? {torch.cuda.is_available()}")
+            self._device = (
+                torch.device("cuda")
+                if torch.cuda.is_available()
+                else torch.device("cpu")
+            )
 
         with open(cfg_path) as f:
             cfg = om.load(f)
@@ -78,8 +93,6 @@ class ComposerLLM(BaseLM):
         tokenizer = Cl100kTokenizer()
 
         self.precision = precision
-
-        device = torch.device("cuda")
 
         # Load checkpoints
         state_dict = torch.load(ckpt_path, map_location=f'cpu')
