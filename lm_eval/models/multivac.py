@@ -66,12 +66,17 @@ class ComposerLLM(BaseLM):
             self,
             ckpt_path: str,
             cfg_path: str,
-            device,
+            device: str = "cuda",
             # Can be any tokenizer whose forward method returns a dict w/ keys ['input_ids', 'attention_mask']
-            batch_size=2,
+            batch_size: int = 2,
             precision: Optional[str] = None,
     ):
         super().__init__()
+
+        assert isinstance(ckpt_path, str)
+        assert isinstance(cfg_path, str)
+        assert isinstance(device, str)
+        assert isinstance(batch_size, int)
 
         if device:
             if device not in ["cuda", "cpu"]:
@@ -99,23 +104,7 @@ class ComposerLLM(BaseLM):
         state_dict = torch.load(ckpt_path, map_location=f'cpu')
         state_dict["state"].pop("optimizers")
         load_state_dict_with_low_memory(self.model, state_dict['state']['model'])
-        self.model.to(torch.bfloat16).to(device)
-
-        assert isinstance(device, str)
-
-        if device:
-            if device not in ["cuda", "cpu"]:
-                device = int(device)
-            self._device = torch.device(device)
-            print(f"Using device '{device}'")
-        else:
-            print("Device not specified")
-            print(f"Cuda Available? {torch.cuda.is_available()}")
-            self._device = (
-                torch.device("cuda")
-                if torch.cuda.is_available()
-                else torch.device("cpu")
-            )
+        self.model.to(torch.bfloat16).to(self._device)
 
         self.model.eval()
 

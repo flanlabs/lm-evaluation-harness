@@ -1,5 +1,15 @@
 # Language Model Evaluation Harness
 
+
+## Fork note from Honglu:
+For multivac models, sample usage:
+```bash
+python main.py --model multivac --model_args ckpt_path=ckpt.pt,cfg_path=cfg.yaml --tasks lambada_openai,hellaswag --device 0
+```
+
+Below were the original instructions from EleutherAI.
+----
+
 ![](https://github.com/EleutherAI/lm-evaluation-harness/workflows/Build/badge.svg)
 [![codecov](https://codecov.io/gh/EleutherAI/lm-evaluation-harness/branch/master/graph/badge.svg?token=JSG3O2427J)](https://codecov.io/gh/EleutherAI/lm-evaluation-harness)
 
