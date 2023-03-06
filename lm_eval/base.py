@@ -218,7 +218,7 @@ class BaseLM(LM):
 
         return loglikelihoods
 
-    def _loglikelihood_tokens(self, requests, disable_tqdm=False):
+    def _loglikelihood_tokens(self, requests, padding_length=None, padding_token=0, disable_tqdm=False):
         # TODO: implement some kind of efficient-request-middleware that lumps together requests with the same context
         res = []
 
@@ -241,8 +241,6 @@ class BaseLM(LM):
             inps = []
             cont_toks_list = []
             inplens = []
-
-            padding_length = None
 
             # because vectorizing is annoying, we first convert each (context, continuation) pair to padded
             # tensors, then we pack them together into a batch, call the model, and then pick it all apart
@@ -279,9 +277,7 @@ class BaseLM(LM):
                 inp = torch.cat(
                     [
                         inp,  # [seq]
-                        torch.zeros(padding_length - inplen, dtype=torch.long).to(
-                            inp.device
-                        ),  # [padding_length - seq]
+                        torch.full((padding_length - inplen,), padding_token, dtype=torch.long, device=inp.device),  # [padding_length - seq]
                     ],
                     dim=0,
                 )
