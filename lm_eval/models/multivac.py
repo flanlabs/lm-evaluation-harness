@@ -2,6 +2,7 @@ import torch
 from lm_eval.base import BaseLM
 from tqdm import tqdm
 import torch
+from torch import nn
 import torch.nn.functional as F
 from composer.core.precision import get_precision_context, Precision
 from multivac.llm2.src.model_registry import COMPOSER_MODEL_REGISTRY
