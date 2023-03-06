@@ -7,6 +7,7 @@ import torch.nn.functional as F
 from composer.core.precision import get_precision_context, Precision
 from multivac.llm2.src.model_registry import COMPOSER_MODEL_REGISTRY
 from multivac.src.tok.cl100k import Cl100kTokenizer
+from multivac.src.mosaic_gpt import MosaicGPT, ComposerMosaicGPT
 from typing import Optional
 from lm_eval import utils
 import transformers
@@ -126,10 +127,14 @@ class ComposerLLM(BaseLM):
 
     @property
     def max_length(self):
-        if hasattr(self.model, 'cfg'):
+        # ComposerMosaicGPT wraps around MosaicGPT as `.model` method. Thus the
+        # `self.model.model`.
+        if isinstance(self.model, ComposerMosaicGPT):
+            return self.model.model.cfg.max_seq_len
+        elif isinstance(self.model, MosaicGPT):
             return self.model.cfg.max_seq_len
         else:
-            return self.model.config.max_position_embeddings
+            raise ValueError(f"Unknown model type: {type(self.model)}")
 
     @property
     def max_gen_toks(self):
